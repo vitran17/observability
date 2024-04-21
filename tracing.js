@@ -2,9 +2,10 @@ const { Resource } = require("@opentelemetry/resources");
 const {
   SemanticResourceAttributes,
 } = require("@opentelemetry/semantic-conventions");
-const { ConsoleSpanExporter } = require("@opentelemetry/sdk-trace-base");
+// const { ConsoleSpanExporter } = require("@opentelemetry/sdk-trace-base");
 const { SimpleSpanProcessor } = require("@opentelemetry/sdk-trace-base");
 const { NodeTracerProvider } = require("@opentelemetry/sdk-trace-node");
+const { JaegerExporter } = require("@opentelemetry/exporter-jaeger");
 const { trace } = require("@opentelemetry/api");
 //Instrumentations
 const {
@@ -17,9 +18,11 @@ const { HttpInstrumentation } = require("@opentelemetry/instrumentation-http");
 const { registerInstrumentations } = require("@opentelemetry/instrumentation");
 //Exporter
 module.exports = (serviceName) => {
-  const exporter = new ConsoleSpanExporter();
+  // const exporter = new ConsoleSpanExporter();
+  const exporter = new JaegerExporter({ serviceName });
   const provider = new NodeTracerProvider({
     resource: new Resource({
+      // [SemanticResourceAttributes.SERVICE_NAME]: serviceName,
       [SemanticResourceAttributes.SERVICE_NAME]: serviceName,
     }),
   });
